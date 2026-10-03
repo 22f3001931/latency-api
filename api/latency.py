@@ -63,6 +63,7 @@ class handler(BaseHTTPRequestHandler):
         )
         self.send_header("Access-Control-Max-Age", "86400")
         self.send_header("Content-Length", "0")
+        self.send_header("Access-Control-Expose-Headers", "*")
         self.end_headers()
 
     def do_GET(self):
