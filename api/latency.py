@@ -6,8 +6,9 @@ DATA = json.loads((Path(__file__).parent / "q-vercel-latency.json").read_text())
 
 CORS = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "*",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With",
+    "Access-Control-Max-Age": "86400",
 }
 
 
