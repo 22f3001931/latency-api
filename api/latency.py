@@ -52,7 +52,17 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(body)
 
     def do_OPTIONS(self):
-        self._send(204)
+        requested = self.headers.get("Access-Control-Request-Headers", "")
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header(
+            "Access-Control-Allow-Headers",
+            requested or "Content-Type, Authorization, Accept, Origin, X-Requested-With",
+        )
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
 
     def do_GET(self):
         self._send(200, {"status": "ok", "usage": "POST {regions, threshold_ms}"})
