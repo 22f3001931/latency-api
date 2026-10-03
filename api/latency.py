@@ -42,17 +42,22 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(status)
         for k, v in CORS.items():
             self.send_header(k, v)
+        body = json.dumps(payload).encode() if payload is not None else b""
         if payload is not None:
-            body = json.dumps(payload).encode()
             self.send_header("Content-Type", "application/json")
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if body:
             self.wfile.write(body)
-        else:
-            self.end_headers()
 
     def do_OPTIONS(self):
         self._send(204)
+
+    def do_GET(self):
+        self._send(200, {"status": "ok", "usage": "POST {regions, threshold_ms}"})
+
+    def do_HEAD(self):
+        self._send(200)
 
     def do_POST(self):
         try:
@@ -60,8 +65,7 @@ class handler(BaseHTTPRequestHandler):
             body = json.loads(self.rfile.read(length) or b"{}")
             regions = body.get("regions", [])
             threshold = float(body.get("threshold_ms", 0))
-        except Exception:
-            return self._send(400, {"error": "invalid JSON body"})
-        metrics = compute(regions, threshold)
-        # Per-region keys at top level, plus the same data under "regions".
-        self._send(200, {**metrics, "regions": metrics})
+            metrics = compute(regions, threshold)
+            self._send(200, {**metrics, "regions": metrics})
+        except Exception as e:
+            self._send(400, {"error": str(e)})
