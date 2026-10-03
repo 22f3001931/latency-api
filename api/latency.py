@@ -8,6 +8,7 @@ CORS = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With",
+    "Access-Control-Expose-Headers": "*",
     "Access-Control-Max-Age": "86400",
 }
 
